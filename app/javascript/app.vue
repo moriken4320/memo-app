@@ -5,6 +5,11 @@
         {{ memo.title }}： {{ memo.description }}
       </li>
     </ul>
+    <div>
+      <input v-model="title" placeholder="title">
+      <input v-model="description" placeholder="description">
+      <button @click="addMemo">メモを追加</button>
+    </div>
   </div>
 </template>
 
@@ -14,7 +19,9 @@ import axios from 'axios';
 export default {
   data: function () {
     return {
-      memos: "memos"
+      memos: "memos",
+      title: '',
+      description: '',
     }
   },
   mounted () { //このファイルが読み込まれたときに実行
@@ -26,6 +33,15 @@ export default {
       .then(response => ( //then・・・axiosの通信が成功した際に呼ばれる
         this.memos = response.data
       ))
+    },
+    addMemo: function() {
+      axios.post('/api/memos', {
+        title: this.title,
+        description: this.description
+      })
+      .then(response => (
+        this.setMemo()
+      ));
     }
   }
 
